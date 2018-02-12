@@ -1,0 +1,16 @@
+{
+  "name": "urlget",
+  "version": "1.0.0",
+  "description": "A lightweight http/https request for Nodejs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/warlock/urlget.git"
+  },
+  "keywords": ["http", "https", "request", "client", "promises"],
+  "author": "",
+  "license": "ISC"
+}
