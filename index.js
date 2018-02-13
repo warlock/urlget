@@ -3,19 +3,49 @@ const req = {}
 req['http:'] = require('http')
 req['https:'] = require('https')
 
-module.exports = urlobjective => {
+module.exports = (urlobjective, inputOptions) => {
   return new Promise((resolve, reject) => {
     const url = new URL(urlobjective)
-    console.log('getting ' + url.protocol)
-    req[url.protocol].get('https://www.debian.org', resp => {
-      let data = ''
+    var options = {
+      path: url.pathname,
+      host: url.host
+    }
+
+    if (inputOptions) {
+      if (inputOptions.proxy) {
+        const cutproxy = inputOptions.proxy.split(':')
+        options.proxy = cutproxy[0]
+        options.port = parseInt(cutproxy[1],0)
+      }
+
+      if (inputOptions.agent) {
+        options.headers = { 'User-Agent': inputOptions.agent }
+      }
+    }
+
+    req[url.protocol].get(options, response => {
+
+      var data = ''
+
    
-      resp.on('data', chunk => {
+      response.on('data', chunk => {
         data += chunk
       })
    
-      resp.on('end', () => {
-        resolve(data)
+      response.on('end', () => {
+        var body
+        try {
+          body = JSON.parse(data)
+        } catch (error) {
+          body = data
+        }
+
+        const result = {
+          statusCode: response.statusCode,
+          headers: response.headers,
+          body
+        }
+        resolve(result)
       })
    
     }).on("error", error => {
