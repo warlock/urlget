@@ -6,16 +6,24 @@ req['https:'] = require('https')
 module.exports = (urlobjective, inputOptions) => {
   return new Promise((resolve, reject) => {
     const url = new URL(urlobjective)
-    var options = {
+    var options = options = {
+      protocol: url.protocol,
       path: url.pathname,
-      host: url.host
+      host: url.hostname
     }
 
     if (inputOptions) {
       if (inputOptions.proxy) {
         const cutproxy = inputOptions.proxy.split(':')
-        options.proxy = cutproxy[0]
-        options.port = parseInt(cutproxy[1],0)
+        options = {
+          protocol: url.protocol,
+          host: cutproxy[0],
+          port: parseInt(cutproxy[1],0),
+          path: urlobjective,
+          headers: {
+            Host: url.hostname
+          }
+        }
       }
 
       if (inputOptions.agent) {
@@ -43,6 +51,7 @@ module.exports = (urlobjective, inputOptions) => {
         const result = {
           statusCode: response.statusCode,
           headers: response.headers,
+          options,
           body
         }
         resolve(result)
