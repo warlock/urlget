@@ -6,19 +6,22 @@ req['https:'] = require('https')
 module.exports = (urlobjective, inputOptions) => {
   return new Promise((resolve, reject) => {
     const url = new URL(urlobjective)
-    var options = options = {
+    var options = {
       protocol: url.protocol,
       path: url.pathname,
       host: url.hostname
     }
+    var protocol = url.protocol
 
     if (inputOptions) {
       if (inputOptions.proxy) {
-        const cutproxy = inputOptions.proxy.split(':')
+        const cutproxy = inputOptions.proxy.split('//')
+        const cutnewproxy = cutproxy[1].split(':')
+        protocol = cutproxy[0]
         options = {
-          protocol: url.protocol,
-          host: cutproxy[0],
-          port: parseInt(cutproxy[1],0),
+          protocol: cutproxy[0],
+          host: cutnewproxy[0],
+          port: parseInt(cutnewproxy[1],0),
           path: urlobjective,
           headers: {
             Host: url.hostname
@@ -31,7 +34,7 @@ module.exports = (urlobjective, inputOptions) => {
       }
     }
 
-    req[url.protocol].get(options, response => {
+    req[protocol].get(options, response => {
 
       var data = ''
 

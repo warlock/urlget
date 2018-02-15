@@ -32,8 +32,8 @@ RES: 200
 
 ## Using options:
 ```js
-urlGet('https://httpbin.org/user-agent', {
-  proxy: '127.0.0.1:8080',
+urlGet('http://httpbin.org/user-agent', {
+  proxy: 'http://127.0.0.1:8080',
   agent: 'urlGet'
 })
   .then(response => {
